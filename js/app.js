@@ -1,62 +1,95 @@
-/**
- * 
- * Manipulating the DOM exercise.
- * Exercise programmatically builds navigation,
- * scrolls to anchors from navigation,
- * and highlights section in viewport upon scrolling.
- * 
- * Dependencies: None
- * 
- * JS Version: ES2015/ES6
- * 
- * JS Standard: ESlint
- * 
-*/
+const sections = Array.from(document.querySelectorAll("section"));
 
-/**
- * Comments should be present at the beginning of each procedure and class.
- * Great to have comments before crucial code sections within the procedure.
-*/
+const itemsGroup = document.getElementById("navbar__list");
 
-/**
- * Define Global Variables
- * 
-*/
+function createListItems(){
+    for(let sec of sections)
+    {
+        let secName = sec.getAttribute("data-nav");
+        let link = sec.getAttribute("id");
+        let itemLinks = document.createElement("li");
+        let sources = document.createElement("a");
+        sources.classList.add("menu__link");
+        sources.setAttribute("href", `#${link}`);
+        sources.textContent = `${secName}`;
+        itemLinks.appendChild(sources);
+        itemsGroup.appendChild(itemLinks);
+        sources.addEventListener("click", function () {
+            sources.classList.add("activeLinks");
+        });
+        sources.onblur = function () {
+            sources.classList.remove("activeLinks");
+        };
+    }
+}
+createListItems();
 
+const scrollTop = function () {
+    const scrollBtn = document.createElement("button");
+    scrollBtn.innerHTML = "Back To Top";
+    scrollBtn.setAttribute("class", "scrolltotop");
+    let main = document.getElementsByTagName("main");
+    main[0].appendChild(scrollBtn);
+    const scrollBtnDisplay = function () {
+      window.scrollY > window.innerHeight
+        ? scrollBtn.classList.add("scrolltotopshow")
+        : scrollBtn.classList.remove("scrolltotopshow");
+    };
+    window.addEventListener("scroll", scrollBtnDisplay);
+    const scrollWindow = function () {
+      if (window.scrollY !== 0) {
+        setTimeout(function () {
+          window.scrollTo(0, window.scrollY - 30);
+          scrollWindow();
+        }, 10);
+      }
+    };
+    scrollBtn.addEventListener("click", scrollWindow);
+  };
+  scrollTop();
 
-/**
- * End Global Variables
- * Start Helper Functions
- * 
-*/
+  let secHeaders = document.getElementsByTagName("h2");
+  let i;
+  for (i = 0; i < secHeaders.length; i++) {
+    let secHeader = secHeaders[i];
+    secHeader.addEventListener("click", function () {
+      this.classList.toggle("active");
+      let collapse = this.nextElementSibling;
+      if (collapse.style.display === "block") {
+        collapse.style.display = "none";
+      } else {
+        collapse.style.display = "block";
+      }
+    });
+  }
+  
+  
+  window.onscroll = () => {
+    document.querySelectorAll("section").forEach((element) => {
+      if (
+        element.getBoundingClientRect().top >= -400 &&
+        element.getBoundingClientRect().top <= 150
+      ) {
+        element.classList.add("your-active-class");
+      } else {
+        element.classList.remove("your-active-class");
+      }
+    });
+  };
 
+  const links = document.querySelectorAll(".menu__link");
+  links.forEach((ele) => {
+    ele.addEventListener("click", smoothScroll);
+  });
 
+  function smoothScroll(e) {
+    e.preventDefault();
+    const anch = this.getAttribute("href");
+    const offsetTop = document.querySelector(anch).offsetTop;
+    scroll({
+      top: offsetTop,
+      behavior: "smooth",
+    });
+  }
 
-/**
- * End Helper Functions
- * Begin Main Functions
- * 
-*/
-
-// build the nav
-
-
-// Add class 'active' to section when near top of viewport
-
-
-// Scroll to anchor ID using scrollTO event
-
-
-/**
- * End Main Functions
- * Begin Events
- * 
-*/
-
-// Build menu 
-
-// Scroll to section on link click
-
-// Set sections as active
-
-
+  
